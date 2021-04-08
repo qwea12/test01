@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<setting name="cacheEnabled" value="true" />
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="localCacheScope" value="SESSION" />
+		<setting name="proxyFactory" value="CGLIB" />
+		<setting name="callSettersOnNulls" value="true" />
+		<setting name="jdbcTypeForNull" value="VARCHAR"/>
+	</settings>
+
+	<!-- mapping 文件路径配置 -->
+	<mappers>
+		<package name="com.gp.User.dao" />
+
+	</mappers>
+
+
+
+</configuration>

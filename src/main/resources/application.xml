@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="  
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd 
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context.xsd 
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<description>Database相关的公共配置 </description>
+
+	<!-- 读取Jdbc的配置参数 -->
+
+	 <context:property-placeholder
+		ignore-unresolvable="true" location="classpath:jdbc.properties" />
+	<!--<context:property-placeholder
+		ignore-unresolvable="true" location="file:/opt/conf/jdbc.properties" />-->
+
+
+	<!-- 数据源基本信息配置 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="url" value="${jdbc.url}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxIdle" value="${dbcp2.maxIdle}" />
+		<property name="minIdle" value="${dbcp2.minIdle}" />
+		<property name="initialSize" value="${dbcp2.initialSize}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${dbcp2.timeBetweenEvictionRunsMillis}" />
+		<property name="poolPreparedStatements" value="${dbcp2.poolPreparedStatements}" />
+		<property name="maxOpenPreparedStatements" value="${dbcp2.maxOpenPreparedStatements}" />
+		<property name="removeAbandonedTimeout" value="${dbcp2.removeAbandonedTimeout}" />
+
+		<!-- 申请连接的时候检测，建议配置为true 不影响性能，且保证安全性。 -->
+		<!-- 如果空闲时间大于 timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+		<property name="testWhileIdle" value="${dbcp2.testWhileIdle}" />
+		<!-- 申请连接时执行validationQuery 检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnBorrow" value="${dbcp2.testOnBorrow}" />
+		<!-- 归还连接时执行validationQuery 检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnReturn" value="${dbcp2.testOnReturn}" />
+		<!-- 用来检测连接是否有效的sql，要求是查询语句 -->
+		<!-- 如果validationQuery 为 null，以上testOnBorrow、testOnReturn、testWhileIdle 
+			都不起其作用。 -->
+		<property name="validationQuery" value="${dbcp2.validationQuery}" />
+	</bean>
+
+	<!-- 配置 sqlSessionFactory (Mybatis 在 spring 中 Bean 的固定配置) -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- mapperLocations 或 configLocation -->
+		<!-- <property name="mapperLocations" value="classpath*:com/**/*Mapper.xml" /> -->
+		<property name="configLocation" value="classpath:sqlMapping.xml" />
+	</bean>
+
+	<!-- 定义一个事务管理器（声明式的事务） -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Redis配置 -->
+
+
+
+
+	<!--转化json-->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<!--json视图拦截器，读取到@ResponseBody的时候去配置它-->
+				<ref bean="mappingJacksonHttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	<!--json转化器，它可以将结果转化-->
+	<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+
+
+</beans>

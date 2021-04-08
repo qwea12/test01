@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名规则：表对应 java 类的名称 -->
+<mapper namespace="com.gp.User.dao.TestDao">
+<select id="testSelect" resultType="map">
+  select * from item
+</select>
+
+  <select id="test" resultType="map">
+  select itemname from item where itemid=1
+</select>
+
+
+</mapper>
